@@ -35,7 +35,7 @@ void setup() {
   dino = new Dino();  
 }
 
-// The draw function continuously executes the lines of code contained inside its block until the program is stopped //<>// //<>//
+// The draw function continuously executes the lines of code contained inside its block until the program is stopped
 void draw() {
   // Set the background color
   background(255);
@@ -47,6 +47,13 @@ void draw() {
   dino.move();
   // Show the dino
   dino.show();
+
+  // print score
+  fill(0);
+  textAlign(LEFT);
+  textSize(20);
+  text("Score", 10, height - 375);
+  text(dino.score, 10, height - 355);
 }
 
 // The keyPressed function is called once every time a key is pressed
@@ -67,6 +74,21 @@ void keyPressed() {
       case DOWN:
       // Make the dino crouch
       dino.isCrouching = true;
+      break;
+    }
+    break;
+  }
+}
+
+// The keyReleased function is called once every time a key is released
+void keyReleased() {
+  // Check which key was pressed
+  switch (key) {
+  case CODED:
+    switch (keyCode) {
+      case DOWN:
+      // Make the dino stand
+      dino.isCrouching = false;
       break;
     }
     break;
