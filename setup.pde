@@ -13,10 +13,14 @@ PImage bigCactus;
 PImage bird;
 PImage bird1;
 
+// Global
+int groundHeight = 250;
+
 // The setup function runs once when the program starts
 void setup() {
   // Set the size of the display window
-  size(800,400);
+  frameRate(60);
+  fullScreen();
   
   // Load images from the sketch's "data" directory
   dinoRun1 = loadImage("dinorun0000.png");
@@ -41,8 +45,10 @@ void draw() {
   background(255);
   // Set the color used to draw lines and borders around shapes
   stroke(0);
+  strokeWeight(2);
   // Draw a line
-  line(0, height - 100, width, height - 100);
+  line(0, height - groundHeight - 30, width, height - groundHeight - 30);
+  
   // Move the dino
   dino.move();
   // Show the dino
@@ -52,8 +58,8 @@ void draw() {
   fill(0);
   textAlign(LEFT);
   textSize(20);
-  text("Score", 10, height - 375);
-  text(dino.score, 10, height - 355);
+  //text("Score", 10, height - 375);
+  //text(dino.score, 10, height - 355);
 }
 
 // The keyPressed function is called once every time a key is pressed
@@ -66,7 +72,7 @@ void keyPressed() {
     
     // If the dino is on the ground, make it jump
     if (dino.posY == 0) {
-      dino.velY = 12;
+      dino.velY = 16;
     }
     break;
   case CODED:

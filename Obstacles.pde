@@ -2,6 +2,7 @@
 class Obstacles {
   // Declare instance variables for the Obstacle's position, width, height, and type
   float posX;
+  float posY; // Used for birds height 
   int w;
   int h;
   int type;
@@ -33,8 +34,9 @@ class Obstacles {
         h = 120;
         break;
       case eBird:
-        w = 40;
+        w = 60;
         h = 50;
+        posY = 180; // Higher bird (can't jump over)
         break;
     }
   }
@@ -50,17 +52,17 @@ class Obstacles {
     // Depending on the type of obstacle, draw the appropriate image
     switch(type) {
       case eSmallCactus:
-        image(smallCactus, posX, height - 100 - h/2, w, h);
-        break;
+        image(smallCactus, posX - smallCactus.width/2, height - groundHeight - smallCactus.height);
+        break;  
       case eBigCactus:
-        image(bigCactus, posX , height - 110 - h/2, w, h);
+        image(bigCactus, posX - bigCactus.width/2, height - groundHeight - bigCactus.height);
         break;
       case eBird:
         if (flap < 10) {
-          image(bird, posX, height - 160 - h/2, w, h);
+          image(bird, posX - bird.width/2, height - groundHeight - (posY + bird.height - 20));
         }
         else {
-          image(bird1, posX, height - 160 - h/2, w, h);
+          image(bird1, posX - bird1.width/2, height - groundHeight - (posY + bird1.height - 20));
         }
         break;
     }
@@ -77,26 +79,34 @@ class Obstacles {
   }
 
   // Define a method to check if the obstacle collided with the dino
-   boolean isBoomBoom(float dinoX, float dinoY, int dinoW, int dinoH) {
+   boolean isCollision(float dinoX, float dinoY, float dinoW, float dinoH) {
     
-     // Calculate the left, right, top, and bottom of the dino
-     float dinoLeft = dinoX - dinoW/2;
-     float dinoRight = dinoX + dinoW/2;
-     float dinoTop = dinoY - dinoH/2;
-     float dinoBottom = dinoY + dinoH/2;
+    float dinoLeft = dinoX - dinoW/2;
+    float dinoRight = dinoX + dinoW/2;
     
-    // Calculate the left, right, top, and bottom of the obstacle
     float obsLeft = posX - w/2;
     float obsRight = posX + w/2;
-    float obsTop = height - 100 - h/2;
-    float obsBottom = height - 100 + h/2;
 
-    // Check if dino boom boom
-    if((dinoLeft <= obsRight && dinoRight >= obsLeft)) {
-      return true;
+    // Check x-axis collision
+    if((dinoLeft <= obsRight && dinoRight >= obsLeft) || (dinoRight >= obsLeft && dinoLeft <= obsRight)) {
+      float dinoTop = dinoY + dinoH/2;
+      float dinoBottom = dinoY - dinoH/2;
+
+      fill(0);
+      textAlign(LEFT);
+      textSize(20);
+      text(dinoY, 10, height - 375);
+      text(dinoH, 10, height - 355);
+      
+      float obsTop = h;
+      if (dinoBottom <= h) {
+        return true;
+      }
+      // Check y-axis collision
+
     }
 
-     // If none of the above are true, then the obstacle is colliding with the dino
-     return true;
+     // If none of the above are true, then the obstacle is not colliding with the dino
+     return false;
    }
  }

@@ -13,13 +13,12 @@ class Dino {
 
   // Declare an instance variable for the Dino's size
   int dinoX = 150;
-  int groundHeight = 60;
   int dinoWalk = 0;
   int score = 0;
   
   // Declare instance variables for managing the timing of obstacle creation
   int timerBetweenObstacles = 0;
-  int minimumTimeBetweenObstacles = 50;
+  int minimumTimeBetweenObstacles = 100;
   int randomAdditionOfNewObstacles = floor(random(50));
   
   // Declare an ArrayList to hold Obstacle objects
@@ -97,8 +96,8 @@ class Dino {
     for(int i = 0; i < obstacles.size(); i++) {
       obstacles.get(i).move(speed);
     
-      if(obstacles.get(i).isBoomBoom(dinoX, posY, dinoRun1.height, dinoRun1.width)) {
-        dinoDead = false;
+      if(obstacles.get(i).isCollision(dinoX, posY + dinoRun1.height/2, dinoRun1.width*0.5, dinoRun1.height)) {
+        dinoDead = true;
       }
 
       if (obstacles.get(i).posX < 0) {
