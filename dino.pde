@@ -96,7 +96,7 @@ class Dino {
     for(int i = 0; i < obstacles.size(); i++) {
       obstacles.get(i).move(speed);
     
-      if(obstacles.get(i).isCollision(dinoX, posY + dinoRun1.height/2, dinoRun1.width*0.5, dinoRun1.height)) {
+      if(obstacles.get(i).isCollision(dinoX, posY + ((isCrouching) ? dinoDuck.height/2 : dinoRun1.height/2), dinoRun1.width*0.5, dinoRun1.height)) {
         dinoDead = true;
       }
 
@@ -115,7 +115,7 @@ class Dino {
   // Define a method to add an obstacle
   void addObstacle() {
     // Create a new Obstacle and add it to the ArrayList
-    Obstacles obstacle = new Obstacles(floor(random(3)));
+    Obstacles obstacle = new Obstacles(floor(random(6)));
     obstacles.add(obstacle);
   }
   

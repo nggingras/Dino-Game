@@ -12,8 +12,11 @@ class Obstacles {
   
   // Declare constants for the different types of obstacles
   final int eSmallCactus = 0;
-  final int eBigCactus = 1;
-  final int eBird = 2;
+  final int eSmallCactusMany = 1;
+  final int eBigCactus = 2;
+  final int eBirdLow = 3;
+  final int eBirdMiddle = 4;
+  final int eBirdHigh = 5;
  
   // Define the Obstacles constructor
   Obstacles(int _type) {
@@ -28,15 +31,32 @@ class Obstacles {
       case eSmallCactus:
         w = 40;
         h = 80;
+        posY = 0;
+        break;
+      case eSmallCactusMany:
+        w = 40;
+        h = 80;
+        posY = 0;
         break;
       case eBigCactus:
         w = 60;
         h = 120;
+        posY = 0;
         break;
-      case eBird:
+      case eBirdLow:
         w = 60;
         h = 50;
-        posY = 180; // Higher bird (can't jump over)
+        posY = 40; 
+        break;
+      case eBirdMiddle:
+        w = 60;
+        h = 50;
+        posY = 120; 
+        break;
+      case eBirdHigh:
+        w = 60;
+        h = 50;
+        posY = 160; // Higher bird (can't jump over)
         break;
     }
   }
@@ -54,10 +74,15 @@ class Obstacles {
       case eSmallCactus:
         image(smallCactus, posX - smallCactus.width/2, height - groundHeight - smallCactus.height);
         break;  
+      case eSmallCactusMany:
+        image(smallCactusMany, posX - smallCactus.width/2, height - groundHeight - smallCactus.height);
+        break; 
       case eBigCactus:
         image(bigCactus, posX - bigCactus.width/2, height - groundHeight - bigCactus.height);
         break;
-      case eBird:
+      case eBirdLow:
+      case eBirdMiddle:
+      case eBirdHigh:
         if (flap < 10) {
           image(bird, posX - bird.width/2, height - groundHeight - (posY + bird.height - 20));
         }
@@ -89,21 +114,15 @@ class Obstacles {
 
     // Check x-axis collision
     if((dinoLeft <= obsRight && dinoRight >= obsLeft) || (dinoRight >= obsLeft && dinoLeft <= obsRight)) {
+      float dinoBottom = dinoY - dinoH/2;   
       float dinoTop = dinoY + dinoH/2;
-      float dinoBottom = dinoY - dinoH/2;
-
-      fill(0);
-      textAlign(LEFT);
-      textSize(20);
-      text(dinoY, 10, height - 375);
-      text(dinoH, 10, height - 355);
+      float obsTop = posY + h/2;
+      float obsBottom = posY - h/2;
       
-      float obsTop = h;
-      if (dinoBottom <= h) {
+      // Check y-axis collision
+      if (dinoBottom <= obsTop && dinoTop >= obsBottom) {
         return true;
       }
-      // Check y-axis collision
-
     }
 
      // If none of the above are true, then the obstacle is not colliding with the dino

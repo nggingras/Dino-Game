@@ -8,7 +8,7 @@ PImage dinoJump;
 PImage dinoDuck;
 PImage dinoDuck1;
 PImage smallCactus;
-PImage manySmallCactus;
+PImage smallCactusMany;
 PImage bigCactus;
 PImage bird;
 PImage bird1;
@@ -31,11 +31,11 @@ void setup() {
 
   smallCactus = loadImage("cactusSmall0000.png");
   bigCactus = loadImage("cactusBig0000.png");
-  manySmallCactus = loadImage("cactusSmallMany0000.png");
+  smallCactusMany = loadImage("cactusSmallMany0000.png");
   bird = loadImage("berd.png");
   bird1 = loadImage("berd2.png");
   
-  // Create a new Dino object
+  // Create a new Dino object //<>//
   dino = new Dino();  
 }
 
