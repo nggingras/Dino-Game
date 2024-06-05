@@ -16,18 +16,18 @@ void setup() {
   fullScreen();
   
   // Load images from the sketch's "data" directory
-  dinoRun1 = loadImage("dinorun0000.png");
-  dinoRun2 = loadImage("dinorun0001.png");
-  dinoJump = loadImage("dinoJump0000.png");
-  dinoDuck = loadImage("dinoduck0000.png");
-  dinoDuck1 = loadImage("dinoduck0001.png");
-
-  smallCactus = loadImage("cactusSmall0000.png");
-  bigCactus = loadImage("cactusBig0000.png");
-  smallCactusMany = loadImage("cactusSmallMany0000.png");
-  bird = loadImage("berd.png");
-  bird1 = loadImage("berd2.png");
+  dinoRun1 = loadImage("../data/dinorun0000.png");
+  dinoRun2 = loadImage("../data/dinorun0001.png");
+  dinoJump = loadImage("../data/dinoJump0000.png");
+  dinoDuck = loadImage("../data/dinoduck0000.png");
+  dinoDuck1 = loadImage("../data/dinoduck0001.png");
   
+  smallCactus = loadImage("../data/cactusSmall0000.png");
+  bigCactus = loadImage("../data/cactusBig0000.png");
+  smallCactusMany = loadImage("../data/cactusSmallMany0000.png");
+  bird = loadImage("../data/berd.png");
+  bird1 = loadImage("../data/berd2.png");
+
   // Create a new Dino object
   dino = new Dino();  
 }

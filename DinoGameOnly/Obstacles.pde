@@ -18,6 +18,7 @@ class Obstacles {
   final int BIRD_MIDDLE = 4;
   final int BIRD_HIGH = 5;
  
+  /***************************** Public method ******************************************/
   // Define the Obstacles constructor
   Obstacles(int _type) {
     this.positionX = width; // Initialize the position to the width of the screen
@@ -25,8 +26,33 @@ class Obstacles {
     setObstacleSizeAndPosition(); // Set the size and position based on the type
   }
 
+ // Display the obstacle
+  void show() {
+    fill(0);
+    rectMode(CENTER);
+    drawObstacle();
+  }
+
+  // Move the obstacle
+  void move(float speed) {
+    positionX -= speed;
+  }
+
+  // Check if the obstacle collided with the dino
+  boolean isCollision(float dinoX, float dinoY, float dinoWidth, float dinoHeight) {
+    // Check x-axis collision
+    if(isXAxisCollision(dinoX, dinoWidth)) {
+      // Check y-axis collision
+      if(isYAxisCollision(dinoY, dinoHeight)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+ /***************************** Private method ******************************************/
   // Set the size and position based on the obstacle type
-  void setObstacleSizeAndPosition() {
+  private void setObstacleSizeAndPosition() {
     switch (type) {
       case SMALL_CACTUS:
       case SMALL_CACTUS_MANY:
@@ -56,16 +82,9 @@ class Obstacles {
         break;
     }
   }
-  
- // Display the obstacle
-  void show() {
-    fill(0);
-    rectMode(CENTER);
-    drawObstacle();
-  }
 
   // Draw the obstacle based on its type
-  void drawObstacle() {
+  private void drawObstacle() {
     switch(type) {
       case SMALL_CACTUS:
         image(smallCactus, positionX - smallCactus.width/2, height - groundHeight - smallCactus.height);
@@ -85,7 +104,7 @@ class Obstacles {
   }
 
   // Draw the bird obstacle
-  void drawBird() {
+  private void drawBird() {
     if (birdFlapState < 10) {
       image(bird, positionX - bird.width/2, height - groundHeight - (positionY + bird.height - 20));
     } else {
@@ -96,26 +115,9 @@ class Obstacles {
       birdFlapState = 0;
     }
   }
-  
-  // Move the obstacle
-  void move(float speed) {
-    positionX -= speed;
-  }
-
-  // Check if the obstacle collided with the dino
-  boolean isCollision(float dinoX, float dinoY, float dinoWidth, float dinoHeight) {
-    // Check x-axis collision
-    if(isXAxisCollision(dinoX, dinoWidth)) {
-      // Check y-axis collision
-      if(isYAxisCollision(dinoY, dinoHeight)) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   // Check if there is a collision on the x-axis
-  boolean isXAxisCollision(float dinoX, float dinoWidth) {
+  private boolean isXAxisCollision(float dinoX, float dinoWidth) {
     float dinoLeft = dinoX - dinoWidth/2;
     float dinoRight = dinoX + dinoWidth/2;
     float obstacleLeft = positionX - obstacleWidth/2;
@@ -124,7 +126,7 @@ class Obstacles {
   }
 
   // Check if there is a collision on the y-axis
-  boolean isYAxisCollision(float dinoY, float dinoHeight) {
+  private boolean isYAxisCollision(float dinoY, float dinoHeight) {
     float dinoBottom = dinoY - dinoHeight/2;   
     float dinoTop = dinoY + dinoHeight/2;
     float obstacleTop = positionY + obstacleHeight/2;
