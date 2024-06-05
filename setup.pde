@@ -2,16 +2,9 @@
 Dino dino;
 
 // Declare PImage objects for different images
-PImage dinoRun1;
-PImage dinoRun2;
-PImage dinoJump;
-PImage dinoDuck;
-PImage dinoDuck1;
-PImage smallCactus;
-PImage smallCactusMany;
-PImage bigCactus;
-PImage bird;
-PImage bird1;
+PImage dinoRun1, dinoRun2, dinoJump, dinoDuck, dinoDuck1;
+PImage smallCactus, smallCactusMany, bigCactus;
+PImage bird, bird1;
 
 // Global
 int groundHeight = 250;
@@ -35,7 +28,7 @@ void setup() {
   bird = loadImage("berd.png");
   bird1 = loadImage("berd2.png");
   
-  // Create a new Dino object //<>//
+  // Create a new Dino object
   dino = new Dino();  
 }
 
@@ -49,54 +42,41 @@ void draw() {
   // Draw a line
   line(0, height - groundHeight - 30, width, height - groundHeight - 30);
   
-  // Move the dino
+  // Move and show the dino
   dino.move();
-  // Show the dino
   dino.show();
 
-  // print score
-  fill(0);
-  textAlign(LEFT);
-  textSize(20);
-  //text("Score", 10, height - 375);
-  //text(dino.score, 10, height - 355);
+  if (dino.isDead()){
+    noLoop();
+  }
+
+  writeScore();
 }
 
 // The keyPressed function is called once every time a key is pressed
 void keyPressed() {
-  // Check which key was pressed
-  switch (key) {
-  // Space bar  
-  case ' ':
+  if (key == ' ' || keyCode == UP) {
     dino.isCrouching = false;
-    
-    // If the dino is on the ground, make it jump
     if (dino.posY == 0) {
       dino.velY = 16;
     }
-    break;
-  case CODED:
-    switch (keyCode) {
-      case DOWN:
-      // Make the dino crouch
-      dino.isCrouching = true;
-      break;
-    }
-    break;
+  } else if (keyCode == DOWN) {
+    dino.isCrouching = true;
   }
 }
 
 // The keyReleased function is called once every time a key is released
 void keyReleased() {
-  // Check which key was pressed
-  switch (key) {
-  case CODED:
-    switch (keyCode) {
-      case DOWN:
-      // Make the dino stand
-      dino.isCrouching = false;
-      break;
-    }
-    break;
+  if (keyCode == DOWN) {
+    dino.isCrouching = false;
   }
+}
+
+// Write score on screen
+void writeScore() {
+  fill(0);
+  textAlign(LEFT);
+  textSize(30);
+  text("Score", 10, height - 1050);
+  text(dino.score, 10, height - 1020);
 }

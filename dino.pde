@@ -45,15 +45,16 @@ class Dino {
     addObstacle();
     updateDinoPosition();
     updateObstacles();
-    
-    if (dinoDead) {
-      noLoop();
-    }
 
     // Update the score
-    score++;
+    updateScore();
   }
   
+  // Define a method to return dead or alive state of the Dino
+  boolean isDead() {
+    return dinoDead;
+  }
+
   /***************************** Private method ******************************************/
   // Define a method to draw the Dino
   private void drawDino() {
@@ -110,7 +111,7 @@ class Dino {
       
       checkCollision(i);
 
-      if (obstacles.get(i).posX < 0) {
+      if ((obstacles.get(i).positionX + obstacles.get(i).obstacleWidth) < 0) {
         obstacles.remove(i);
       }
     }
@@ -163,5 +164,4 @@ class Dino {
       randomAdditionOfNewObstacles = floor(random(50));
     }
   }
-  
 }
