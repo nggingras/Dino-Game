@@ -1,5 +1,0 @@
-This codebase contains the implementation of a game similar to Google Chrome's offline T-Rex game. The player controls a dinosaur character that can either jump or crouch to avoid obstacles. The game keeps track of the player's score, which increases as the dinosaur successfully avoids obstacles.
-
-The game is implemented in Processing, a flexible software sketchbook and language for learning how to code within the context of the visual arts. The code includes the main game loop, event handlers for key presses and releases, and a Dino class that encapsulates the behavior of the dinosaur character.
-
-Please note that this version of the game does not include any artificial intelligence (AI) components. The dinosaur character is entirely controlled by the player's inputs. There are no AI algorithms making decisions or controlling game elements.
