@@ -1,5 +1,5 @@
-This codebase contains the implementation of a game similar to Google Chrome's offline T-Rex game. The player controls a dinosaur character that can either jump or crouch to avoid obstacles. The game keeps track of the player's score, which increases as the dinosaur successfully avoids obstacles.
+The NEAT algorithm, which stands for NeuroEvolution of Augmenting Topologies, is a method used for evolving artificial neural networks. It is commonly used in the field of artificial intelligence and machine learning.0
 
-The game is implemented in Processing, a flexible software sketchbook and language for learning how to code within the context of the visual arts. The code includes the main game loop, event handlers for key presses and releases, and a Dino class that encapsulates the behavior of the dinosaur character.
+The NEAT algorithm is known for its ability to evolve neural networks with complex structures by allowing the addition and removal of nodes and connections during the evolutionary process. It starts with a population of simple neural networks and evolves them over generations through processes such as mutation and crossover.
 
-Please note that this version of the game does not include any artificial intelligence (AI) components. The dinosaur character is entirely controlled by the player's inputs. There are no AI algorithms making decisions or controlling game elements.
+The goal of the NEAT algorithm is to find neural network architectures that can solve specific tasks or problems. By evolving the neural networks over generations, the algorithm can discover optimal or near-optimal solutions to the given problem.
