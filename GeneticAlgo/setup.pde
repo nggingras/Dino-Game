@@ -8,7 +8,7 @@ PImage bird, bird1;
 
 // Global
 int groundHeight = 250;
-
+int maxPopulation = 10;
 // The setup function runs once when the program starts
 void setup() {
   // Set the size of the display window
@@ -29,7 +29,7 @@ void setup() {
   bird1 = loadImage("../data/berd2.png");
 
   // Create a new Dino object
-  pop = new Population(0.1, 1);  
+  pop = new Population(0.1, maxPopulation);  
 }
 
 // The draw function continuously executes the lines of code contained inside its block until the program is stopped
