@@ -10,6 +10,9 @@ void setup()
   int result = perceptron.activationFunction(inputs);
   
   println(result);
+
+  // Uncomment to run test
+  //runPerceptronTest();
 }
 
 
