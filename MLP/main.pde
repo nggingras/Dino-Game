@@ -15,6 +15,7 @@ void setup()
   
   println(result);
 
+  //test
   // Uncomment to run test
   //runTests()
 }
