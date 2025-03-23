@@ -9,6 +9,11 @@ class Perceptron {
    * Number of inputs to the perceptron.
    */
   int mNumberOfInputs = 0;
+ 
+  /**
+   * Learning rate of the perceptron.
+   */
+  float learningRate = 0;
   
   /**
    * Array of weights for each input.
@@ -27,12 +32,17 @@ class Perceptron {
    * @param _numberOfInputs The number of inputs for the perceptron.
    */
   void initialize(int _numberOfInputs) {
+    
+  learningRate = 0.1;
   mNumberOfInputs = _numberOfInputs;
-  mWeights = new float[_numberOfInputs];
+  mWeights = new float[_numberOfInputs /*+ 1*/];
   
   for (int i = 0; i < _numberOfInputs; i++) {
     mWeights[i] = random(-1, 1);
   }
+  
+  /* Configure Bias to 1 */
+  //mWeights[_numberOfInputs] = 1;
   }
   
   /**
@@ -44,10 +54,23 @@ class Perceptron {
    * @return The output of the perceptron (1 or -1).
    */
   int activationFunction(float[] _inputs) {
+    
   float sum = 0;
   for (int i = 0; i < mNumberOfInputs; i++) {
     sum += _inputs[i] * mWeights[i];
   }
+  //sum += mWeights[mNumberOfInputs];
+  
   return (sum > 0) ? 1 : -1;
+  }
+  
+  void train(float[] _inputs, int _expectedResult) {
+    
+    float error = 0;
+    
+    error = _expectedResult - activationFunction(_inputs); 
+    for (int i = 0; i < (mWeights.length); i++) {
+      mWeights[i] += error * _inputs[i] * learningRate;
+    }
   }
 }
