@@ -108,7 +108,7 @@
       </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
@@ -133,7 +133,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Connection.cpp" />
-    <ClCompile Include="src\NeuralNetwork.cpp" />
+    <ClCompile Include="src\networkVisualizer.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\neuralNetwork.cpp" />
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="tests\tests.cpp" />
     <ClCompile Include="tests\test_connection.cpp" />
@@ -141,6 +143,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Connection.h" />
+    <ClInclude Include="src\networkVisualizer.h" />
+    <ClInclude Include="src\neuralNetwork.h" />
     <ClInclude Include="src\Node.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

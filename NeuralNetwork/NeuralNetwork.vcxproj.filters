@@ -21,7 +21,7 @@
     <ClCompile Include="src\Connection.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\NeuralNetwork.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Node.cpp">
@@ -36,12 +36,24 @@
     <ClCompile Include="tests\tests.cpp">
       <Filter>tests</Filter>
     </ClCompile>
+    <ClCompile Include="src\networkVisualizer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\neuralNetwork.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Connection.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Node.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\networkVisualizer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\neuralNetwork.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

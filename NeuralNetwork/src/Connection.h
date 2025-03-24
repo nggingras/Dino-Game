@@ -11,7 +11,7 @@ class Node;
 
 class Connection {
 public:
-	Connection(Node* _fromNode, Node* _toNode, double _weight, bool _enable);
+	Connection(Node* _fromNode, Node* _toNode, double _weight, bool _enable = 1);
 	~Connection();
 
 	Node*	getFromNode()	const	{ return m_pFromNode; }

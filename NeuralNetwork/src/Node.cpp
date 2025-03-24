@@ -5,10 +5,11 @@
 
 #include "Node.h"
 
-Node::Node(int _nodeId, double _bias) :
+Node::Node(int _nodeId, bool _isInput, double _bias) :
 	m_iNodeId(_nodeId),
 	m_dBias(_bias),
-	m_dOutputValue(0)
+	m_dOutputValue(0),
+	m_bIsInput(_isInput)
 {
 
 }
@@ -20,6 +21,10 @@ Node::~Node()
 
 void Node::activate() 
 {
+	// If no connections, then the node is an input node
+	if (isInputNode()) {
+		return;  // Input nodes already have values
+	}
 
 	for (Connection* connection : m_vInputConnections)
 	{
@@ -30,6 +35,7 @@ void Node::activate()
 
 	m_dOutputValue += m_dBias;
 
+	// Activation function
 	m_dOutputValue = sigmoid(m_dOutputValue);
 }
 
