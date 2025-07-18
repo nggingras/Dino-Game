@@ -16,11 +16,11 @@ public:
 	Node(int _nodeId, bool _isInput, double _bias = 0.0);
 	~Node();  
 
-	void activate();
+	void 	activate();
 	void	addInputConnection(Connection* _connection) { m_vInputConnections.push_back(_connection); }
 
 	// Getters
-	bool    isInputNode()                const   { return m_bIsInput; }
+	bool    isInputNode()               const   { return m_bIsInput; }
 	int		getNodeId()					const	{ return m_iNodeId; }
 	double	getBias()					const	{ return m_dBias; }
 	double	getOutputValue()			const	{ return m_dOutputValue; }

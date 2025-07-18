@@ -26,6 +26,9 @@ void Node::activate()
 		return;  // Input nodes already have values
 	}
 
+	// Reset output value before calculating
+	m_dOutputValue = 0.0;
+
 	for (Connection* connection : m_vInputConnections)
 	{
 		if (connection->isEnabled()) {
@@ -39,7 +42,7 @@ void Node::activate()
 	m_dOutputValue = sigmoid(m_dOutputValue);
 }
 
-double Node::sigmoid(double _x)
+double Node::sigmoid(const double _x)
 {
     return 1.0 / (1.0 + std::exp(-_x));
 }

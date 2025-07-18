@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+#gameContainer {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    text-align: center;
+}
+
+#gameCanvas {
+    border: 2px solid #333;
+    border-radius: 5px;
+    background-color: #fff;
+    display: block;
+    margin: 0 auto 20px auto;
+}
+
+#gameStats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+#gameStats div {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+}
+
+#controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#startBtn {
+    background-color: #28a745;
+    color: white;
+}
+
+#startBtn:hover {
+    background-color: #218838;
+}
+
+#pauseBtn {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+#pauseBtn:hover {
+    background-color: #e0a800;
+}
+
+#resetBtn {
+    background-color: #dc3545;
+    color: white;
+}
+
+#resetBtn:hover {
+    background-color: #c82333;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Network visualization container */
+#networkViz {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f8f9fa;
+    min-height: 200px;
+} 

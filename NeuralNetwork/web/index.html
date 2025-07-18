@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Game - NEAT Training</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="1200" height="600"></canvas>
+        <div id="gameStats">
+            <div id="score">Score: 0</div>
+            <div id="generation">Generation: 1</div>
+            <div id="fitness">Fitness: 0</div>
+        </div>
+        <div id="controls">
+            <button id="startBtn">Start Training</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+        <div id="networkViz"></div>
+        <div id="evolutionStats"></div>
+    </div>
+    
+    <!-- D3.js for network visualization -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Game scripts -->
+    <script src="js/dinoGame.js"></script>
+    <script src="js/networkViz.js"></script>
+    <script src="js/neuralNetwork.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 
