@@ -102,17 +102,17 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Crypt32.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,23 +129,23 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Crypt32.lib;Bcrypt.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Connection.cpp" />
-    <ClCompile Include="src\networkVisualizer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\NEAT.cpp" />
     <ClCompile Include="src\neuralNetwork.cpp" />
     <ClCompile Include="src\Node.cpp" />
-    <ClCompile Include="tests\tests.cpp" />
-    <ClCompile Include="tests\test_connection.cpp" />
-    <ClCompile Include="tests\test_node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Connection.h" />
-    <ClInclude Include="src\networkVisualizer.h" />
+    <ClInclude Include="src\DinoGame.h" />
+    <ClInclude Include="src\NEAT.h" />
     <ClInclude Include="src\neuralNetwork.h" />
     <ClInclude Include="src\Node.h" />
+    <ClInclude Include="src\websocket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

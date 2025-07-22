@@ -27,19 +27,10 @@
     <ClCompile Include="src\Node.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="tests\test_connection.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\test_node.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\tests.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
-    <ClCompile Include="src\networkVisualizer.cpp">
+    <ClCompile Include="src\neuralNetwork.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\neuralNetwork.cpp">
+    <ClCompile Include="src\NEAT.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,11 +41,14 @@
     <ClInclude Include="src\Node.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\networkVisualizer.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\neuralNetwork.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DinoGame.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NEAT.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
