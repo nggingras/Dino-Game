@@ -30,11 +30,11 @@ class ConnectionGene {
         }
 
         //Sanity check - keep weight between bounds
-        if(weight > 1){
-        weight = 1;
+        if(m_weight > 1){
+            m_weight = 1;
         }
-        if(weight < -1){
-        weight = -1;      
+        if(m_weight < -1){
+            m_weight = -1;      
         }
     }
 }

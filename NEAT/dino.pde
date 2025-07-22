@@ -24,10 +24,107 @@ class Dino {
   // Declare an ArrayList to hold Obstacle objects
   ArrayList<Obstacles> obstacles = new ArrayList<Obstacles>();
   
+  // AI-related variables
+  Genotype brain;
+  boolean isAI = false;
+  
   // Define the Dino constructor
   Dino() {}
   
+  // Constructor with AI brain
+  Dino(Genotype _brain) {
+    brain = _brain;
+    isAI = true;
+  }
+  
   /******************************* Public method *****************************************/
+  // AI decision making
+  void think() {
+    if (!isAI || brain == null) return;
+    
+    float[] inputs = getSensorInputs();
+    float[] outputs = brain.feedForward(inputs);
+    
+    // Interpret outputs
+    boolean shouldJump = outputs[0] > 0.5;
+    boolean shouldDuck = outputs[1] > 0.5;
+    
+    // Apply actions
+    if (shouldJump && posY == 0) {
+      velY = 16;
+      isCrouching = false;
+    } else if (shouldDuck) {
+      isCrouching = true;
+    } else {
+      isCrouching = false;
+    }
+  }
+  
+  // Get sensor inputs for the neural network
+  float[] getSensorInputs() {
+    float[] inputs = new float[4];
+    
+    // Find the closest obstacle
+    Obstacles closestObstacle = getClosestObstacle();
+    
+    if (closestObstacle != null) {
+      // Distance to obstacle (normalized)
+      inputs[0] = (closestObstacle.positionX - dinoX) / width;
+      
+      // Obstacle height (normalized)
+      inputs[1] = closestObstacle.obstacleHeight / 200.0;
+      
+      // Obstacle type (bird = 1, cactus = 0) 
+      inputs[2] = (closestObstacle.type >= 3) ? 1.0 : 0.0;
+      
+      // Dino's current Y position (normalized)
+      inputs[3] = posY / 200.0;
+    } else {
+      // No obstacle, neutral inputs
+      inputs[0] = 1.0;  // Far distance
+      inputs[1] = 0.0;  // No height
+      inputs[2] = 0.0;  // No obstacle
+      inputs[3] = posY / 200.0;
+    }
+    
+    return inputs;
+  }
+  
+  // Find the closest obstacle ahead of the dino
+  Obstacles getClosestObstacle() {
+    Obstacles closest = null;
+    float closestDistance = Float.MAX_VALUE;
+    
+    for (Obstacles obstacle : obstacles) {
+      if (obstacle.positionX > dinoX) { // Only consider obstacles ahead
+        float distance = obstacle.positionX - dinoX;
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closest = obstacle;
+        }
+      }
+    }
+    
+    return closest;
+  }
+  
+  // Calculate fitness for this dino
+  float calculateFitness() {
+    if (brain == null) return score;
+    
+    float fitness = score; // Base fitness from survival time
+    
+    // Bonus for staying alive longer
+    if (!dinoDead) {
+      fitness += 50;
+    }
+    
+    // Bonus for high scores
+    fitness += score * 0.1;
+    
+    return fitness;
+  }
+  
   // Define a method to display the Dino and obstacles
   void show() {
     // Set the fill color to black

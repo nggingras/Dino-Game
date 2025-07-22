@@ -1,5 +1,5 @@
-// Declare a Dino object
-Dino dino;
+// Declare Population for NEAT algorithm
+Population population;
 
 // Declare PImage objects for different images
 PImage dinoRun1, dinoRun2, dinoJump, dinoDuck, dinoDuck1;
@@ -28,8 +28,8 @@ void setup() {
   bird = loadImage("../data/berd.png");
   bird1 = loadImage("../data/berd2.png");
 
-  // Create a new Dino object
-  dino = new Dino();  
+  // Create population for NEAT algorithm
+  population = new Population();
 }
 
 // The draw function continuously executes the lines of code contained inside its block until the program is stopped
@@ -42,41 +42,30 @@ void draw() {
   // Draw a line
   line(0, height - groundHeight - 30, width, height - groundHeight - 30);
   
-  // Move and show the dino
-  dino.move();
-  dino.show();
-
-  if (dino.isDead()){
-    noLoop();
+  // Update and show population
+  if (population.shouldEvolve()) {
+    population.evolve();
+  } else {
+    population.update();
+    population.show();
   }
-
-  writeScore();
+  
+  // Display statistics
+  writeStats();
 }
 
-// The keyPressed function is called once every time a key is pressed
+// Manual override controls (for testing)
 void keyPressed() {
-  if (key == ' ' || keyCode == UP) {
-    dino.isCrouching = false;
-    if (dino.posY == 0) {
-      dino.velY = 16;
-    }
-  } else if (keyCode == DOWN) {
-    dino.isCrouching = true;
+  if (key == 'r' || key == 'R') {
+    // Reset population
+    population = new Population();
   }
 }
 
-// The keyReleased function is called once every time a key is released
-void keyReleased() {
-  if (keyCode == DOWN) {
-    dino.isCrouching = false;
-  }
-}
-
-// Write score on screen
-void writeScore() {
+// Write statistics on screen
+void writeStats() {
   fill(0);
   textAlign(LEFT);
-  textSize(30);
-  text("Score", 10, height - 1050);
-  text(dino.score, 10, height - 1020);
+  textSize(20);
+  text(population.getStats(), 10, 30);
 }
