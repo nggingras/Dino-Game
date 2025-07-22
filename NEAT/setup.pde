@@ -68,4 +68,33 @@ void writeStats() {
   textAlign(LEFT);
   textSize(20);
   text(population.getStats(), 10, 30);
+  
+  // Show additional info
+  text("Press 'R' to reset", 10, height - 50);
+  
+  // Highlight best performing dino
+  if (population.aliveCount > 0) {
+    Dino bestDino = null;
+    float bestScore = -1;
+    for (Dino dino : population.dinos) {
+      if (!dino.isDead() && dino.score > bestScore) {
+        bestScore = dino.score;
+        bestDino = dino;
+      }
+    }
+    
+    if (bestDino != null) {
+      // Draw a circle around the best dino
+      stroke(255, 0, 0);
+      strokeWeight(3);
+      noFill();
+      ellipse(bestDino.dinoX, height - groundHeight - (bestDino.posY + 50), 100, 100);
+      
+      // Reset stroke
+      stroke(0);
+      strokeWeight(2);
+      
+      text("Best Score: " + bestScore, 10, 60);
+    }
+  }
 }

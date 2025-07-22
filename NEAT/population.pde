@@ -6,7 +6,7 @@ class Population {
     
     ObstacleManager obstacleManager = new ObstacleManager();
     
-    int populationSize = 50;
+    int populationSize = 20;
     int generation = 1;
     int aliveCount = 0;
     boolean allDead = false;
