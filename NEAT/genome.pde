@@ -59,10 +59,17 @@ class Genotype {
         // Calculate values for hidden and output nodes
         // Sort nodes by type and ID to ensure proper calculation order
         ArrayList<NodeGene> sortedNodes = new ArrayList<NodeGene>(nodes);
-        sortedNodes.sort((a, b) -> {
-            if (a.m_type != b.m_type) return a.m_type - b.m_type;
-            return a.m_id - b.m_id;
-        });
+        // Simple sort by type first, then by ID
+        for (int i = 0; i < sortedNodes.size() - 1; i++) {
+            for (int j = i + 1; j < sortedNodes.size(); j++) {
+                NodeGene a = sortedNodes.get(i);
+                NodeGene b = sortedNodes.get(j);
+                if (a.m_type > b.m_type || (a.m_type == b.m_type && a.m_id > b.m_id)) {
+                    sortedNodes.set(i, b);
+                    sortedNodes.set(j, a);
+                }
+            }
+        }
         
         for (NodeGene node : sortedNodes) {
             if (node.m_type != node.INPUT && !nodeValues.containsKey(node.m_id)) {
@@ -100,12 +107,12 @@ class Genotype {
         }
         
         // Add connection mutation (5% chance)
-        if (Math.random() < 0.05) {
+        if (random(1) < 0.05) {
             addConnectionMutation();
         }
         
         // Add node mutation (3% chance)  
-        if (Math.random() < 0.03) {
+        if (random(1) < 0.03) {
             addNodeMutation();
         }
     }
@@ -147,6 +154,6 @@ class Genotype {
         
         // Create two new connections
         connections.add(new ConnectionGene(oldConn.m_inNode, newNode, connections.size(), 1.0));
-        connections.add(new ConnectionGene(newNode, oldConn.m_outNode, connections.size(), oldConn.m_weight));
+        connections.add(new ConnectionGene(newNode, oldConn.m_outNode, connections.size(), (float)oldConn.m_weight));
     }
 }

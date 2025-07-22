@@ -4,10 +4,10 @@ class ConnectionGene {
     NodeGene m_inNode;
     NodeGene m_outNode;
     int m_innovation = 0; // Innovation number is the unique identifier of the connection gene.
-    double m_weight = 0.0;
+    float m_weight = 0.0;
     boolean m_enabled = true;
 
-    ConnectionGene(NodeGene _inNode, NodeGene _outNode, int _innovation, double _weight) {
+    ConnectionGene(NodeGene _inNode, NodeGene _outNode, int _innovation, float _weight) {
         m_inNode = _inNode;
         m_outNode = _outNode;
         m_innovation = _innovation;
@@ -25,8 +25,8 @@ class ConnectionGene {
 
     // Mutate the weight between -1 and 1 of the connection gene 10% of the time.
     void mutateWeight() {
-        if (Math.random() < 0.1) {
-            m_weight = Math.random() * 2 - 1;
+        if (random(1) < 0.1) {
+            m_weight = random(-1, 1);
         }
 
         //Sanity check - keep weight between bounds

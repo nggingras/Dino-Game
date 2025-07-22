@@ -4,6 +4,8 @@ class Population {
     ArrayList<Dino> dinos = new ArrayList<Dino>();
     ArrayList<Genotype> genotypes = new ArrayList<Genotype>();
     
+    ObstacleManager obstacleManager = new ObstacleManager();
+    
     int populationSize = 50;
     int generation = 1;
     int aliveCount = 0;
@@ -29,11 +31,22 @@ class Population {
     void update() {
         aliveCount = 0;
         
+        // Update obstacles first
+        obstacleManager.update();
+        
         for (int i = 0; i < dinos.size(); i++) {
             if (!dinos.get(i).isDead()) {
-                dinos.get(i).think(); // AI decision making
+                dinos.get(i).think(obstacleManager); // AI decision making with obstacle data
                 dinos.get(i).move();
-                aliveCount++;
+                
+                // Check collision with shared obstacles
+                if (obstacleManager.checkCollision(dinos.get(i).dinoX, dinos.get(i).posY, dinos.get(i).isCrouching)) {
+                    dinos.get(i).dinoDead = true;
+                }
+                
+                if (!dinos.get(i).isDead()) {
+                    aliveCount++;
+                }
             }
         }
         
@@ -43,8 +56,12 @@ class Population {
         }
     }
     
-    // Display all dinos
+    // Display all dinos and obstacles
     void show() {
+        // Show obstacles first
+        obstacleManager.show();
+        
+        // Show living dinos
         for (Dino dino : dinos) {
             if (!dino.isDead()) {
                 dino.show();
@@ -78,7 +95,16 @@ class Population {
         
         // Keep best performers (elitism)
         ArrayList<Genotype> sorted = new ArrayList<Genotype>(genotypes);
-        sorted.sort((a, b) -> Float.compare(b.fitness, a.fitness));
+        // Simple bubble sort by fitness (descending)
+        for (int i = 0; i < sorted.size() - 1; i++) {
+            for (int j = i + 1; j < sorted.size(); j++) {
+                if (sorted.get(i).fitness < sorted.get(j).fitness) {
+                    Genotype temp = sorted.get(i);
+                    sorted.set(i, sorted.get(j));
+                    sorted.set(j, temp);
+                }
+            }
+        }
         
         int eliteCount = populationSize / 10; // Top 10%
         for (int i = 0; i < eliteCount; i++) {
@@ -91,7 +117,7 @@ class Population {
             Genotype parent2 = selectParent();
             
             Genotype offspring;
-            if (Math.random() < 0.75) { // 75% crossover, 25% mutation only
+            if (random(1) < 0.75) { // 75% crossover, 25% mutation only
                 offspring = crossover(parent1, parent2);
             } else {
                 offspring = new Genotype(parent1);
@@ -108,6 +134,9 @@ class Population {
         for (Genotype genotype : genotypes) {
             dinos.add(new Dino(genotype));
         }
+        
+        // Reset environment for new generation
+        obstacleManager.reset();
         
         generation++;
         aliveCount = populationSize;
@@ -137,7 +166,7 @@ class Population {
         
         // Simple crossover: randomly select connections from both parents
         for (int i = 0; i < offspring.connections.size() && i < parent2.connections.size(); i++) {
-            if (Math.random() < 0.5) {
+            if (random(1) < 0.5) {
                 offspring.connections.get(i).m_weight = parent2.connections.get(i).m_weight;
             }
         }

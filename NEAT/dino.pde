@@ -5,7 +5,6 @@ class Dino {
   float posY = 0;
   float velY = 0;
   float gravity = 0.6;
-  float speed = 5;
 
   // Declare instance variables for managing the Dino's jumping and crouching
   boolean isCrouching = false;
@@ -15,14 +14,6 @@ class Dino {
   int dinoX = 150;
   int dinoWalk = 0;
   int score = 0;
-  
-  // Declare instance variables for managing the timing of obstacle creation
-  int timerBetweenObstacles = 0;
-  int minimumTimeBetweenObstacles = 100;
-  int randomAdditionOfNewObstacles = floor(random(50));
-  
-  // Declare an ArrayList to hold Obstacle objects
-  ArrayList<Obstacles> obstacles = new ArrayList<Obstacles>();
   
   // AI-related variables
   Genotype brain;
@@ -39,10 +30,10 @@ class Dino {
   
   /******************************* Public method *****************************************/
   // AI decision making
-  void think() {
+  void think(ObstacleManager obstacleManager) {
     if (!isAI || brain == null) return;
     
-    float[] inputs = getSensorInputs();
+    float[] inputs = getSensorInputs(obstacleManager);
     float[] outputs = brain.feedForward(inputs);
     
     // Interpret outputs
@@ -61,11 +52,11 @@ class Dino {
   }
   
   // Get sensor inputs for the neural network
-  float[] getSensorInputs() {
+  float[] getSensorInputs(ObstacleManager obstacleManager) {
     float[] inputs = new float[4];
     
     // Find the closest obstacle
-    Obstacles closestObstacle = getClosestObstacle();
+    Obstacles closestObstacle = obstacleManager.getClosestObstacle(dinoX);
     
     if (closestObstacle != null) {
       // Distance to obstacle (normalized)
@@ -90,24 +81,6 @@ class Dino {
     return inputs;
   }
   
-  // Find the closest obstacle ahead of the dino
-  Obstacles getClosestObstacle() {
-    Obstacles closest = null;
-    float closestDistance = Float.MAX_VALUE;
-    
-    for (Obstacles obstacle : obstacles) {
-      if (obstacle.positionX > dinoX) { // Only consider obstacles ahead
-        float distance = obstacle.positionX - dinoX;
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closest = obstacle;
-        }
-      }
-    }
-    
-    return closest;
-  }
-  
   // Calculate fitness for this dino
   float calculateFitness() {
     if (brain == null) return score;
@@ -125,25 +98,18 @@ class Dino {
     return fitness;
   }
   
-  // Define a method to display the Dino and obstacles
+  // Define a method to display the Dino (without obstacles)
   void show() {
     // Set the fill color to black
     fill(0);
     
     drawDino();
     updateDinoWalk();
-    displayObstacles();
   }
 
-  // Define a method to move the Dino and obstacles
+  // Define a method to move the Dino (without obstacle management)
   void move() {
-
-    updateSpeed();
-    addObstacle();
     updateDinoPosition();
-    updateObstacles();
-
-    // Update the score
     updateScore();
   }
   
@@ -187,33 +153,6 @@ class Dino {
     }
   }
 
-  // Loop through the obstacles ArrayList and call the show method on each Obstacle
-  private void displayObstacles() {
-    for(int i = 0; i < obstacles.size(); i++) {
-      obstacles.get(i).show();
-    }
-  }
-
-  // Define a method to update the speed of the game
-  private void updateSpeed() {
-    speed += 0.001;
-  }
-
-  // Loop through the obstacles ArrayList and call the move method on each Obstacle
-  // Check for collisions between the Dino and each obstacle
-  // If an obstacle moves off the screen, remove it from the ArrayList
-  private void updateObstacles() {
-    for(int i = 0; i < obstacles.size(); i++) {
-      obstacles.get(i).move(speed);
-      
-      checkCollision(i);
-
-      if ((obstacles.get(i).positionX + obstacles.get(i).obstacleWidth) < 0) {
-        obstacles.remove(i);
-      }
-    }
-  }
-
   // Define a method to update the Dino's position
   private void updateDinoPosition() {
     // Update the Dino's vertical position based on its velocity
@@ -230,35 +169,10 @@ class Dino {
     }
   }
 
-  // Define a method to check collision between obstacles and the Dino
-  // Return true if the Dino collides with an obstacle
-  private void checkCollision(int i) {
-    if(obstacles.get(i).isCollision(dinoX, posY + ((isCrouching) ? dinoDuck.height/2 : dinoRun1.height/2), dinoRun1.width*0.5, dinoRun1.height)) {
-      dinoDead = true;
-    }
-  }
-
   // Define a method to update the score on the screen
   private void updateScore() {
     if (!dinoDead) {
       score++;
-    }
-  }
-
-  // Define a method to add an obstacle
-  private void addObstacle() {
-
-    // Increment the timer between obstacles
-    timerBetweenObstacles += 1;
-
-    // If enough time has passed, add a new obstacle
-    if (timerBetweenObstacles > (minimumTimeBetweenObstacles + randomAdditionOfNewObstacles)) {
-      Obstacles obstacle = new Obstacles(floor(random(6)));
-      obstacles.add(obstacle);
-
-      // Reset the timer and generate a new random time for the next obstacle
-      timerBetweenObstacles = 0;
-      randomAdditionOfNewObstacles = floor(random(50));
     }
   }
 }
