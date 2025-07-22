@@ -48,28 +48,35 @@ json genomeToJSON(Genome* genome) {
     genomeData["id"] = static_cast<int>(reinterpret_cast<uintptr_t>(genome));
     genomeData["numInputs"] = neat->getConfig().numInputs;
     genomeData["numOutputs"] = neat->getConfig().numOutputs;
-    
+
     // Nodes
     json nodes = json::array();
-    for (int i = 0; i < neat->getConfig().numInputs; i++) {
-        nodes.push_back({{"id", i}, {"layer", 0}, {"type", "input"}});
-    }
-    for (int i = 0; i < neat->getConfig().numOutputs; i++) {
-        nodes.push_back({{"id", neat->getConfig().numInputs + i}, {"layer", 1}, {"type", "output"}});
+    for (const auto& node : genome->m_nodes) {
+        std::string type;
+        if (node.isInput) type = "input";
+        else if (node.isOutput) type = "output";
+        else type = "hidden";
+        // For visualization, try to infer layer: input=0, output=last, hidden=1 (or more if needed)
+        int layer = node.isInput ? 0 : (node.isOutput ? 2 : 1);
+        nodes.push_back({
+            {"id", node.nodeId},
+            {"layer", layer},
+            {"type", type},
+            {"bias", node.bias}
+        });
     }
     genomeData["nodes"] = nodes;
-    
-    // Connections (fully connected for now)
+
+    // Connections
     json connections = json::array();
-    for (int i = 0; i < neat->getConfig().numInputs; i++) {
-        for (int j = 0; j < neat->getConfig().numOutputs; j++) {
-            connections.push_back({
-                {"fromNode", i},
-                {"toNode", neat->getConfig().numInputs + j},
-                {"weight", 0.5},
-                {"enabled", true}
-            });
-        }
+    for (const auto& conn : genome->m_connections) {
+        connections.push_back({
+            {"fromNode", conn.fromNode},
+            {"toNode", conn.toNode},
+            {"weight", conn.weight},
+            {"enabled", conn.enabled},
+            {"innovationNumber", conn.innovationNumber}
+        });
     }
     genomeData["connections"] = connections;
     return genomeData;

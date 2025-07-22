@@ -123,10 +123,13 @@ class DinoGame {
     // Main game loop
     gameLoop() {
         if (!this.isRunning || this.isPaused) return;
-        
+
+        // Call AI update if enabled
+        this.updateAI();
+
         this.update();
         this.render();
-        
+
         if (!this.dinoDead) {
             this.animationId = requestAnimationFrame(() => this.gameLoop());
         } else {

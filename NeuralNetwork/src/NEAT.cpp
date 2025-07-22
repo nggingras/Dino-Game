@@ -11,13 +11,18 @@
 
 // Innovation implementation
 Innovation::Innovation(Type _type, int _fromNode, int _toNode, int _innovationNumber, int _newNodeId)
-    : m_type(_type), m_fromNode(_fromNode), m_toNode(_toNode), 
-      m_innovationNumber(_innovationNumber), m_newNodeId(_newNodeId)
+    : m_type(_type), 
+      m_fromNode(_fromNode), 
+      m_toNode(_toNode), 
+      m_innovationNumber(_innovationNumber), 
+      m_newNodeId(_newNodeId)
 {
 }
 
 // Genome implementation
-Genome::Genome() : m_fitness(0.0), m_adjustedFitness(0.0)
+Genome::Genome() 
+    : m_fitness(0.0), 
+      m_adjustedFitness(0.0)
 {
 }
 

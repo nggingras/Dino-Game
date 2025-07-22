@@ -65,6 +65,11 @@ public:
             : nodeId(_id), bias(_bias), isInput(_input), isOutput(_output) {}
     };
 
+    std::vector<NodeGene> m_nodes; // <-- Make public
+    std::vector<ConnectionGene> m_connections; // <-- Make public
+    double m_fitness;
+    double m_adjustedFitness;
+
     Genome();
     ~Genome();
 
@@ -93,10 +98,10 @@ public:
     static Genome crossover(const Genome& _parent1, const Genome& _parent2);
 
 private:
-    std::vector<NodeGene> m_nodes;
-    std::vector<ConnectionGene> m_connections;
-    double m_fitness;
-    double m_adjustedFitness;
+    // std::vector<NodeGene> m_nodes; // <-- Make public
+    // std::vector<ConnectionGene> m_connections; // <-- Make public
+    // double m_fitness;
+    // double m_adjustedFitness;
 };
 
 // Species groups similar genomes together

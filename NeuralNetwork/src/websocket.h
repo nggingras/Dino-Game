@@ -13,6 +13,7 @@
 class SimpleWebSocketServer {
 private:
     SOCKET serverSocket;
+    SOCKET clientSocket = INVALID_SOCKET; // Store the current client socket
     std::function<void(const std::string&)> messageCallback;
     std::function<void()> connectCallback;
     std::function<void()> disconnectCallback;
@@ -216,6 +217,7 @@ private:
                 if (request.find("GET /") == 0 && request.find("Upgrade: websocket") != std::string::npos) {
                     if (handleHandshake(clientSocket, request)) {
                         handshakeCompleted = true;
+                        this->clientSocket = clientSocket; // Set the client socket for sending messages
                         if (connectCallback) connectCallback();
                         continue;
                     } else {
@@ -339,8 +341,7 @@ public:
     }
     
     bool sendMessage(const std::string& message) {
-        // This would need to be implemented to send to the current client
-        // For simplicity, we'll store the client socket and send to it
-        return true;
+        if (clientSocket == INVALID_SOCKET) return false;
+        return sendFrame(clientSocket, message, 0x01);
     }
 }; 

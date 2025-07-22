@@ -1,0 +1,37 @@
+# C++ build artifacts
+*.exe
+*.dll
+*.obj
+*.pdb
+*.ilk
+*.log
+*.tlog
+*.ipdb
+*.iobj
+*.lastbuildstate
+*.recipe
+*.vcxproj.user
+*.FileListAbsolute.txt
+
+# Build directories
+/Debug/
+/Release/
+/x64/
+/NeuralNetwork/Debug/
+/NeuralNetwork/x64/
+
+# Visual Studio/VSCode
+.vs/
+.vscode/
+
+# Other
+*.applocal.log
+
+# Node/web build artifacts (if any)
+node_modules/
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db 
