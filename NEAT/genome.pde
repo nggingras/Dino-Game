@@ -51,7 +51,7 @@ class Genotype {
         
         // Set input values
         for (int i = 0; i < inputs.length && i < nodes.size(); i++) {
-            if (nodes.get(i).m_type == nodes.get(i).INPUT) {
+            if (nodes.get(i).m_type == NodeGene.INPUT) {
                 nodeValues.put(nodes.get(i).m_id, inputs[i]);
             }
         }
@@ -72,7 +72,7 @@ class Genotype {
         }
         
         for (NodeGene node : sortedNodes) {
-            if (node.m_type != node.INPUT && !nodeValues.containsKey(node.m_id)) {
+            if (node.m_type != NodeGene.INPUT && !nodeValues.containsKey(node.m_id)) {
                 float sum = 0;
                 for (ConnectionGene conn : connections) {
                     if (conn.m_outNode.m_id == node.m_id && conn.m_enabled && nodeValues.containsKey(conn.m_inNode.m_id)) {
@@ -86,7 +86,7 @@ class Genotype {
         // Collect output values
         ArrayList<Float> outputs = new ArrayList<Float>();
         for (NodeGene node : nodes) {
-            if (node.m_type == node.OUTPUT && nodeValues.containsKey(node.m_id)) {
+            if (node.m_type == NodeGene.OUTPUT && nodeValues.containsKey(node.m_id)) {
                 outputs.add(nodeValues.get(node.m_id));
             }
         }
@@ -125,7 +125,7 @@ class Genotype {
         NodeGene outNode = nodes.get((int)random(nodes.size()));
         
         // Ensure we don't create loops or invalid connections
-        if (inNode.m_id == outNode.m_id || inNode.m_type == inNode.OUTPUT || outNode.m_type == outNode.INPUT) {
+        if (inNode.m_id == outNode.m_id || inNode.m_type == NodeGene.OUTPUT || outNode.m_type == NodeGene.INPUT) {
             return;
         }
         
@@ -149,7 +149,7 @@ class Genotype {
         
         // Create new node
         int newNodeId = nodes.size();
-        NodeGene newNode = new NodeGene(newNodeId, newNode.HIDDEN);
+        NodeGene newNode = new NodeGene(newNodeId, NodeGene.HIDDEN);
         nodes.add(newNode);
         
         // Create two new connections
