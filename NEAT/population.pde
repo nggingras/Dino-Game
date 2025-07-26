@@ -13,6 +13,8 @@ class Population {
     
     float bestFitness = 0;
     float averageFitness = 0;
+    float bestNormalFitness = 0;  // Best actual game score (for display)
+    float averageNormalFitness = 0;  // Average actual game score (for display)
     
     // Performance tracking
     ArrayList<Float> generationBestScores = new ArrayList<Float>();
@@ -76,19 +78,29 @@ class Population {
     // Calculate fitness for all genotypes
     void calculateFitness() {
         float totalFitness = 0;
+        float totalNormalFitness = 0;
         bestFitness = 0;
+        bestNormalFitness = 0;
         
         for (int i = 0; i < dinos.size(); i++) {
             float fitness = dinos.get(i).calculateFitness();
+            float normalFitness = dinos.get(i).score;  // Just the game score
+            
             genotypes.get(i).fitness = fitness;
             totalFitness += fitness;
+            totalNormalFitness += normalFitness;
             
             if (fitness > bestFitness) {
                 bestFitness = fitness;
             }
+            
+            if (normalFitness > bestNormalFitness) {
+                bestNormalFitness = normalFitness;
+            }
         }
         
         averageFitness = totalFitness / populationSize;
+        averageNormalFitness = totalNormalFitness / populationSize;
     }
     
     // Create next generation using NEAT algorithm
@@ -147,10 +159,10 @@ class Population {
         allDead = false;
         
         // Track performance
-        generationBestScores.add(bestFitness);
-        generationAvgScores.add(averageFitness);
+        generationBestScores.add(bestNormalFitness);
+        generationAvgScores.add(averageNormalFitness);
         
-        println("Generation " + generation + " - Best: " + bestFitness + " Avg: " + averageFitness);
+        println("Generation " + generation + " - Best: " + bestNormalFitness + " Avg: " + averageNormalFitness);
         
         // Print performance trend every 5 generations
         if (generation % 5 == 0) {
@@ -195,7 +207,7 @@ class Population {
     // Get statistics string
     String getStats() {
         return "Gen: " + generation + " Alive: " + aliveCount + "/" + populationSize + 
-               " Best: " + nf(bestFitness, 1, 1) + " Avg: " + nf(averageFitness, 1, 1);
+               " Best: " + nf(bestNormalFitness, 1, 1) + " Avg: " + nf(averageNormalFitness, 1, 1);
     }
     
     // Print performance trend analysis
