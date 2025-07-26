@@ -14,6 +14,10 @@ class Population {
     float bestFitness = 0;
     float averageFitness = 0;
     
+    // Performance tracking
+    ArrayList<Float> generationBestScores = new ArrayList<Float>();
+    ArrayList<Float> generationAvgScores = new ArrayList<Float>();
+    
     Population() {
         // Create initial population
         for (int i = 0; i < populationSize; i++) {
@@ -142,7 +146,16 @@ class Population {
         aliveCount = populationSize;
         allDead = false;
         
+        // Track performance
+        generationBestScores.add(bestFitness);
+        generationAvgScores.add(averageFitness);
+        
         println("Generation " + generation + " - Best: " + bestFitness + " Avg: " + averageFitness);
+        
+        // Print performance trend every 5 generations
+        if (generation % 5 == 0) {
+            printPerformanceTrend();
+        }
     }
     
     // Select parent using tournament selection
@@ -183,5 +196,39 @@ class Population {
     String getStats() {
         return "Gen: " + generation + " Alive: " + aliveCount + "/" + populationSize + 
                " Best: " + nf(bestFitness, 1, 1) + " Avg: " + nf(averageFitness, 1, 1);
+    }
+    
+    // Print performance trend analysis
+    void printPerformanceTrend() {
+        if (generationBestScores.size() < 5) return;
+        
+        int recentGens = min(5, generationBestScores.size());
+        float recentAvgBest = 0;
+        float recentAvgAvg = 0;
+        
+        for (int i = generationBestScores.size() - recentGens; i < generationBestScores.size(); i++) {
+            recentAvgBest += generationBestScores.get(i);
+            recentAvgAvg += generationAvgScores.get(i);
+        }
+        
+        recentAvgBest /= recentGens;
+        recentAvgAvg /= recentGens;
+        
+        println("--- Performance Trend (last " + recentGens + " generations) ---");
+        println("Average Best Score: " + nf(recentAvgBest, 1, 1));
+        println("Average Population Score: " + nf(recentAvgAvg, 1, 1));
+        
+        if (generationBestScores.size() >= 10) {
+            float oldAvgBest = 0;
+            for (int i = generationBestScores.size() - 10; i < generationBestScores.size() - 5; i++) {
+                oldAvgBest += generationBestScores.get(i);
+            }
+            oldAvgBest /= 5;
+            
+            float improvement = ((recentAvgBest - oldAvgBest) / max(1, oldAvgBest)) * 100;
+            println("Improvement over last 5 gens: " + nf(improvement, 1, 1) + "%");
+        }
+        
+        println("-----------------------------------------------");
     }
 }

@@ -71,8 +71,9 @@ class Dino {
     Obstacles secondObstacle = obstacleManager.getSecondClosestObstacle(dinoX);
     
     if (closestObstacle != null) {
-      // Distance to closest obstacle (normalized to 0-1)
-      inputs[0] = max(0, min(1, (closestObstacle.positionX - dinoX) / width));
+      // Distance to closest obstacle (normalized to 0-1, with urgency scaling)
+      float distance = closestObstacle.positionX - dinoX;
+      inputs[0] = max(0, min(1, distance / (width * 0.5))); // Scale to react sooner
       
       // Obstacle height (normalized)
       inputs[1] = closestObstacle.obstacleHeight / 200.0;
@@ -81,9 +82,18 @@ class Dino {
       inputs[2] = (closestObstacle.type == 0 || closestObstacle.type == 1 || closestObstacle.type == 2) ? 1.0 : 0.0; // Is cactus
       inputs[3] = (closestObstacle.type >= 3) ? 1.0 : 0.0; // Is bird
       
-      // Bird height information (only relevant for birds)
+      // Bird height information with action recommendation
       if (closestObstacle.type >= 3) {
-        inputs[4] = closestObstacle.positionY / 200.0; // Bird height normalized
+        // Normalize bird height and provide action hint
+        float birdHeight = closestObstacle.positionY / 200.0;
+        inputs[4] = birdHeight;
+        
+        // Provide urgency based on distance and dino state
+        if (distance < 100 && posY == 0) { // Close and on ground
+          if (closestObstacle.type == 5) { // High bird - must duck
+            inputs[4] = 1.0; // Strong duck signal
+          }
+        }
       } else {
         inputs[4] = 0.0;
       }
@@ -98,14 +108,15 @@ class Dino {
     
     // Second obstacle information (for better planning)
     if (secondObstacle != null) {
-      inputs[5] = max(0, min(1, (secondObstacle.positionX - dinoX) / width));
+      float secondDistance = secondObstacle.positionX - dinoX;
+      inputs[5] = max(0, min(1, secondDistance / (width * 0.8))); // Further lookahead
       inputs[6] = (secondObstacle.type >= 3) ? 1.0 : 0.0; // Is second obstacle a bird
     } else {
       inputs[5] = 1.0;  // Far distance
       inputs[6] = 0.0;  // No second bird
     }
     
-    // Dino's current state
+    // Dino's current state (enhanced)
     inputs[7] = posY / 200.0; // Dino Y position (normalized)
     
     return inputs;
