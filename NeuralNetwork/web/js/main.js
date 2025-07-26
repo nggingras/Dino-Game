@@ -11,6 +11,7 @@ class DinoGameApp {
         this.currentGeneration = 1;
         this.population = [];
         this.currentGenomeIndex = 0;
+        this.lastGenerationUpdate = 0;
         
         this.initializeEventListeners();
         this.initializeStats();
@@ -91,17 +92,98 @@ class DinoGameApp {
 
         // Show generation and network viz
         document.getElementById('generation').style.display = '';
-        document.getElementById('networkViz').style.display = '';
+        document.getElementById('networkViz').style.display = 'block';
+
+        // For demo purposes, create a mock neural network to show visualization
+        this.createMockNeuralNetwork();
 
         // Instead of initializing a local population, notify the backend to start training
         // The backend will send genomes one by one
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
             this.ws.send(JSON.stringify({ type: 'ready' }));
+        } else {
+            // If no backend available, run a demo with mock network
+            console.log('No C++ backend available, running demo visualization');
+            this.runDemoVisualization();
         }
 
         // Update UI
         document.getElementById('startManualBtn').disabled = false;
         document.getElementById('startBtn').disabled = true;
+    }
+    
+    // Create mock neural network for demonstration
+    createMockNeuralNetwork() {
+        const mockNetwork = {
+            numInputs: 4,
+            numOutputs: 2,
+            nodes: [
+                { id: 5, type: 'hidden', layer: 1 },
+                { id: 6, type: 'hidden', layer: 1 },
+                { id: 7, type: 'hidden', layer: 2 }
+            ],
+            connections: [
+                { fromNode: 0, toNode: 5, weight: 0.8, enabled: true },
+                { fromNode: 1, toNode: 5, weight: -0.6, enabled: true },
+                { fromNode: 2, toNode: 6, weight: 1.2, enabled: true },
+                { fromNode: 3, toNode: 6, weight: -0.3, enabled: true },
+                { fromNode: 5, toNode: 7, weight: 0.9, enabled: true },
+                { fromNode: 6, toNode: 7, weight: -0.4, enabled: true },
+                { fromNode: 7, toNode: 4, weight: 1.1, enabled: true },
+                { fromNode: 7, toNode: 5, weight: -0.7, enabled: true },
+                { fromNode: 0, toNode: 4, weight: 0.2, enabled: true }
+            ]
+        };
+        
+        this.networkViz.updateNetwork(mockNetwork);
+    }
+    
+    // Run demo visualization with mock data
+    runDemoVisualization() {
+        let generation = 1;
+        
+        const demoLoop = () => {
+            if (!this.isTraining) return;
+            
+            // Generate mock input/output values that change over time
+            const time = Date.now() / 1000;
+            const mockInputs = [
+                0.5 + 0.3 * Math.sin(time * 0.5),      // dinoY
+                0.1 * Math.cos(time * 1.2),            // dinoVelocity  
+                0.8 + 0.2 * Math.sin(time * 0.8),      // obstacleX
+                0.6 + 0.4 * Math.cos(time * 0.3)       // obstacleHeight
+            ];
+            
+            const mockOutputs = [
+                Math.max(0, Math.sin(time * 0.7)),     // jump
+                Math.max(0, Math.cos(time * 1.1))      // crouch
+            ];
+            
+            // Update visualization with mock real-time data
+            this.networkViz.updateRealTime(mockInputs, mockOutputs);
+            
+            // Update generation periodically
+            if (Math.floor(time) % 5 === 0 && Math.floor(time) !== this.lastGenerationUpdate) {
+                generation++;
+                this.currentGeneration = generation;
+                this.lastGenerationUpdate = Math.floor(time);
+                
+                // Create slightly different network topology for new generation
+                this.createMockNeuralNetwork();
+                
+                // Update evolution stats
+                const bestFitness = 100 + generation * 10 + Math.random() * 50;
+                const avgFitness = bestFitness * 0.7 + Math.random() * 20;
+                this.evolutionStats.addFitness(generation, bestFitness, avgFitness);
+            }
+            
+            this.updateStats();
+            
+            // Continue the demo loop
+            requestAnimationFrame(demoLoop);
+        };
+        
+        demoLoop();
     }
     
     // Remove or disable the placeholder initializePopulation and trainingLoop logic
