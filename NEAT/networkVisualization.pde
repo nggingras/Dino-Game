@@ -19,27 +19,28 @@ class NetworkVisualization {
   
   NetworkVisualization() {
     // Set dimensions for the visualization
-    // Increased height to accommodate 8 inputs
-    vizWidth = 420;
-    vizHeight = 280; // Reduced height slightly for better fit
+    // Adjusted dimensions to fit better on screen while showing 8 inputs
+    vizWidth = 380;  // Slightly reduced width
+    vizHeight = 260; // Reduced height for better fit
   }
-  
-  // Update visualization position based on current screen dimensions
-  void updatePosition() {
-    vizX = (width - vizWidth) / 2;
-    vizY = 30; // Increased margin from top for better visibility
-  }
+
   
   // Draw the neural network visualization for the best dino
   void draw(Population pop) {
     if (!isVisible || pop.aliveCount == 0) return;
     
-    // Update position based on current screen dimensions
-    updatePosition();
-    
     // Find the best performing dino
     Dino bestDino = getBestDino(pop);
     if (bestDino == null || bestDino.brain == null) return;
+    
+    // Calculate position fresh each time to ensure stability
+    // Center horizontally with safety margins
+    vizX = max(20, (width - vizWidth) / 2);
+    vizX = min(vizX, width - vizWidth - 20);
+    
+    // Position in middle-top area, well below any UI text
+    vizY = 120; // Increased margin to avoid overlap with stats text
+    vizY = min(vizY, height - vizHeight - 50); // Ensure it fits on screen
     
     // Draw background
     drawBackground();
