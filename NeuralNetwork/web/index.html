@@ -8,10 +8,7 @@
 </head>
 <body>
     <div id="gameContainer">
-        <div id="gameArea">
-            <canvas id="gameCanvas" width="1200" height="600"></canvas>
-            <div id="networkViz"></div>
-        </div>
+        <canvas id="gameCanvas" width="1200" height="600"></canvas>
         <div id="gameStats">
             <div id="score">Score: 0</div>
             <div id="generation">Generation: 1</div>
@@ -22,10 +19,12 @@
             <button id="startBtn">Start Training</button>
             <button id="resetBtn">Reset</button>
         </div>
+        <div id="networkViz"></div>
         <div id="evolutionStats"></div>
     </div>
     
-    <!-- D3.js for network visualization - removed due to CDN blocking -->
+    <!-- D3.js for network visualization -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     
     <!-- Game scripts -->
     <script src="js/dinoGame.js"></script>

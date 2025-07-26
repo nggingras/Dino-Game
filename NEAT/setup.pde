@@ -1,6 +1,9 @@
 // Declare Population for NEAT algorithm
 Population population;
 
+// Declare neural network visualization
+NetworkVisualization networkViz;
+
 // Declare PImage objects for different images
 PImage dinoRun1, dinoRun2, dinoJump, dinoDuck, dinoDuck1;
 PImage smallCactus, smallCactusMany, bigCactus;
@@ -30,6 +33,9 @@ void setup() {
 
   // Create population for NEAT algorithm
   population = new Population();
+  
+  // Create network visualization
+  networkViz = new NetworkVisualization();
 }
 
 // The draw function continuously executes the lines of code contained inside its block until the program is stopped
@@ -50,6 +56,9 @@ void draw() {
     population.show();
   }
   
+  // Draw neural network visualization overlay
+  networkViz.draw(population);
+  
   // Display statistics
   writeStats();
 }
@@ -59,6 +68,10 @@ void keyPressed() {
   if (key == 'r' || key == 'R') {
     // Reset population
     population = new Population();
+  }
+  if (key == 'v' || key == 'V') {
+    // Toggle network visualization
+    networkViz.toggleVisibility();
   }
 }
 
@@ -71,6 +84,7 @@ void writeStats() {
   
   // Show additional info
   text("Press 'R' to reset", 10, height - 50);
+  text("Press 'V' to toggle network visualization", 10, height - 30);
   
   // Highlight best performing dino
   if (population.aliveCount > 0) {
