@@ -18,17 +18,24 @@ class NetworkVisualization {
   float nodeSpacing = 25; // Reduced spacing for 8 inputs
   
   NetworkVisualization() {
-    // Position the visualization in the middle-top of the screen
+    // Set dimensions for the visualization
     // Increased height to accommodate 8 inputs
     vizWidth = 420;
-    vizHeight = 300;
+    vizHeight = 280; // Reduced height slightly for better fit
+  }
+  
+  // Update visualization position based on current screen dimensions
+  void updatePosition() {
     vizX = (width - vizWidth) / 2;
-    vizY = 20;
+    vizY = 30; // Increased margin from top for better visibility
   }
   
   // Draw the neural network visualization for the best dino
   void draw(Population pop) {
     if (!isVisible || pop.aliveCount == 0) return;
+    
+    // Update position based on current screen dimensions
+    updatePosition();
     
     // Find the best performing dino
     Dino bestDino = getBestDino(pop);
