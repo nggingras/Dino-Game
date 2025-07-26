@@ -15,7 +15,7 @@ class NetworkVisualization {
   // Node properties
   float nodeRadius = 12;  // Slightly smaller nodes
   float layerSpacing = 80;
-  float nodeSpacing = 25; // Reduced spacing for 8 inputs
+  float nodeSpacing = 50; // Reduced spacing for 8 inputs
   
   NetworkVisualization() {
     // Set dimensions for the visualization
@@ -43,7 +43,7 @@ class NetworkVisualization {
     vizY = min(vizY, height - vizHeight - 50); // Ensure it fits on screen
     
     // Draw background
-    drawBackground();
+    //drawBackground(); //NGG Bug here, commented out to avoid issues
     
     // Draw network
     drawNetwork(bestDino.brain, bestDino, pop.obstacleManager);
@@ -83,7 +83,7 @@ class NetworkVisualization {
     float[] inputs = bestDino.getSensorInputs(obstacleManager);
     float[] outputs = brain.feedForward(inputs);
     
-    // Organize nodes by type and layer
+    // Organize nodes by type
     ArrayList<NodeGene> inputNodes = new ArrayList<NodeGene>();
     ArrayList<NodeGene> hiddenNodes = new ArrayList<NodeGene>();
     ArrayList<NodeGene> outputNodes = new ArrayList<NodeGene>();
@@ -94,17 +94,81 @@ class NetworkVisualization {
       else if (node.m_type == NodeGene.OUTPUT) outputNodes.add(node);
     }
     
-    // Calculate positions for nodes
+    // Calculate positions once (still needed for connections)
     HashMap<Integer, PVector> nodePositions = calculateNodePositions(inputNodes, hiddenNodes, outputNodes);
     
-    // Draw connections first (behind nodes)
+    // Draw connections first
     drawConnections(brain, nodePositions);
     
-    // Draw nodes
-    drawNodes(inputNodes, hiddenNodes, outputNodes, nodePositions, inputs, outputs);
+    // Draw nodes and labels in one pass
+    drawNodesAndLabels(inputNodes, hiddenNodes, outputNodes, nodePositions, inputs, outputs);
+  }
+  
+  // Combined function to draw nodes and labels together
+  void drawNodesAndLabels(ArrayList<NodeGene> inputNodes, ArrayList<NodeGene> hiddenNodes, 
+                       ArrayList<NodeGene> outputNodes, HashMap<Integer, PVector> nodePositions,
+                       float[] inputs, float[] outputs) {
+    strokeWeight(2);
+    String[] inputLabels = {"obstDist", "obstH", "isCactus", "isBird", "birdH", "secDist", "secBird", "dinoY"};
+    String[] outputLabels = {"jump", "crouch"};
     
-    // Draw labels
-    drawNodeLabels(nodePositions, inputs, outputs);
+    // Draw input nodes with labels in one pass
+    for (int i = 0; i < inputNodes.size(); i++) {
+      PVector pos = nodePositions.get(inputNodes.get(i).m_id);
+      if (pos != null) {
+        // Draw node
+        fill(inputColor);
+        stroke(60);
+        ellipse(pos.x, pos.y, nodeRadius * 2, nodeRadius * 2);
+        
+        // Draw labels immediately
+        fill(0);
+        textAlign(CENTER, CENTER);
+        textSize(20);
+        if (i < inputLabels.length) {
+          text(inputLabels[i], pos.x - 50, pos.y - nodeRadius + 10);
+        }
+        if (i < inputs.length) {
+          text(nf(inputs[i], 1, 2), pos.x, pos.y + nodeRadius + 8);
+        }
+      }
+    }
+    
+    // Draw hidden nodes
+    for (NodeGene node : hiddenNodes) {
+      PVector pos = nodePositions.get(node.m_id);
+      if (pos != null) {
+        fill(hiddenColor);
+        stroke(60);
+        ellipse(pos.x, pos.y, nodeRadius * 2, nodeRadius * 2);
+      }
+    }
+    
+    // Draw output nodes with labels in one pass
+    for (int i = 0; i < outputNodes.size(); i++) {
+      PVector pos = nodePositions.get(outputNodes.get(i).m_id);
+      if (pos != null) {
+        // Draw node with activation highlighting
+        if (i < outputs.length && outputs[i] > 0.5) {
+          fill(highlightColor);
+        } else {
+          fill(outputColor);
+        }
+        stroke(60);
+        ellipse(pos.x, pos.y, nodeRadius * 2, nodeRadius * 2);
+        
+        // Draw labels immediately
+        fill(0);
+        textAlign(CENTER, CENTER);
+        textSize(20);
+        if (i < outputLabels.length) {
+          text(outputLabels[i], pos.x + 45, pos.y - nodeRadius + 10);
+        }
+        if (i < outputs.length) {
+          text(nf(outputs[i], 1, 2), pos.x, pos.y + nodeRadius + 8);
+        }
+      }
+    }
   }
   
   // Calculate positions for all nodes
@@ -162,61 +226,19 @@ class NetworkVisualization {
       }
     }
   }
-  
-  // Draw all nodes
-  void drawNodes(ArrayList<NodeGene> inputNodes, ArrayList<NodeGene> hiddenNodes, 
-                 ArrayList<NodeGene> outputNodes, HashMap<Integer, PVector> nodePositions,
-                 float[] inputs, float[] outputs) {
-    strokeWeight(2);
-    
-    // Draw input nodes
-    for (int i = 0; i < inputNodes.size(); i++) {
-      PVector pos = nodePositions.get(inputNodes.get(i).m_id);
-      if (pos != null) {
-        fill(inputColor);
-        stroke(60);
-        ellipse(pos.x, pos.y, nodeRadius * 2, nodeRadius * 2);
-      }
-    }
-    
-    // Draw hidden nodes
-    for (NodeGene node : hiddenNodes) {
-      PVector pos = nodePositions.get(node.m_id);
-      if (pos != null) {
-        fill(hiddenColor);
-        stroke(60);
-        ellipse(pos.x, pos.y, nodeRadius * 2, nodeRadius * 2);
-      }
-    }
-    
-    // Draw output nodes with activation highlighting
-    for (int i = 0; i < outputNodes.size() && i < outputs.length; i++) {
-      PVector pos = nodePositions.get(outputNodes.get(i).m_id);
-      if (pos != null) {
-        // Highlight if output is active (> 0.5)
-        if (outputs[i] > 0.5) {
-          fill(highlightColor);
-        } else {
-          fill(outputColor);
-        }
-        stroke(60);
-        ellipse(pos.x, pos.y, nodeRadius * 2, nodeRadius * 2);
-      }
-    }
-  }
-  
+
   // Draw labels for nodes showing their values
   void drawNodeLabels(HashMap<Integer, PVector> nodePositions, float[] inputs, float[] outputs) {
     fill(0);
     textAlign(CENTER, CENTER);
-    textSize(9); // Slightly smaller to fit more labels
+    textSize(20); // Slightly smaller to fit more labels
     
-    // Input labels with values (updated for 8 inputs)
+    // Input labels with values
     String[] inputLabels = {"obstDist", "obstH", "isCactus", "isBird", "birdH", "secDist", "secBird", "dinoY"};
     for (int i = 0; i < min(inputs.length, inputLabels.length); i++) {
       PVector pos = nodePositions.get(i);
       if (pos != null) {
-        text(inputLabels[i], pos.x, pos.y - nodeRadius - 8);
+        text(inputLabels[i], pos.x - 50, pos.y - nodeRadius + 10);
         text(nf(inputs[i], 1, 2), pos.x, pos.y + nodeRadius + 8);
       }
     }
@@ -227,7 +249,7 @@ class NetworkVisualization {
       // Output nodes start after input nodes in the node list
       PVector pos = nodePositions.get(inputs.length + i);
       if (pos != null) {
-        text(outputLabels[i], pos.x, pos.y - nodeRadius - 8);
+        text(outputLabels[i], pos.x + 45, pos.y - nodeRadius + 10);
         text(nf(outputs[i], 1, 2), pos.x, pos.y + nodeRadius + 8);
       }
     }
@@ -236,12 +258,12 @@ class NetworkVisualization {
   // Draw generation and network info
   void drawGenerationInfo(Population pop) {
     fill(0);
-    textAlign(LEFT, CENTER);
-    textSize(12);
-    text("Generation: " + pop.generation, vizX + 10, vizY + vizHeight - 15);
+    textAlign(RIGHT, CENTER);
+    textSize(20);
+    text("Generation: " + pop.generation, vizX + vizWidth - 125, vizY + vizHeight + 65);
     
     textAlign(RIGHT, CENTER);
-    text("Network Topology", vizX + vizWidth - 10, vizY + 15);
+    text("Network Topology", vizX + vizWidth - 95, vizY - 95);
   }
   
   // Toggle visibility
