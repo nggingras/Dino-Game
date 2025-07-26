@@ -13,14 +13,15 @@ class NetworkVisualization {
   color bgColor = color(248, 249, 250, 240);  // Semi-transparent background
   
   // Node properties
-  float nodeRadius = 15;
+  float nodeRadius = 12;  // Slightly smaller nodes
   float layerSpacing = 80;
-  float nodeSpacing = 30;
+  float nodeSpacing = 25; // Reduced spacing for 8 inputs
   
   NetworkVisualization() {
     // Position the visualization in the middle-top of the screen
-    vizWidth = 400;
-    vizHeight = 250;
+    // Increased height to accommodate 8 inputs
+    vizWidth = 420;
+    vizHeight = 300;
     vizX = (width - vizWidth) / 2;
     vizY = 20;
   }
@@ -200,10 +201,10 @@ class NetworkVisualization {
   void drawNodeLabels(HashMap<Integer, PVector> nodePositions, float[] inputs, float[] outputs) {
     fill(0);
     textAlign(CENTER, CENTER);
-    textSize(10);
+    textSize(9); // Slightly smaller to fit more labels
     
-    // Input labels with values
-    String[] inputLabels = {"dinoY", "obstX", "obstH", "obstType"};
+    // Input labels with values (updated for 8 inputs)
+    String[] inputLabels = {"obstDist", "obstH", "isCactus", "isBird", "birdH", "secDist", "secBird", "dinoY"};
     for (int i = 0; i < min(inputs.length, inputLabels.length); i++) {
       PVector pos = nodePositions.get(i);
       if (pos != null) {
