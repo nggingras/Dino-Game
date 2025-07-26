@@ -106,14 +106,19 @@ class Genotype {
             conn.mutateWeight();
         }
         
-        // Add connection mutation (5% chance)
-        if (random(1) < 0.05) {
+        // Add connection mutation (10% chance, increased from 5%)
+        if (random(1) < 0.10) {
             addConnectionMutation();
         }
         
-        // Add node mutation (3% chance)  
-        if (random(1) < 0.03) {
+        // Add node mutation (5% chance, increased from 3%)  
+        if (random(1) < 0.05) {
             addNodeMutation();
+        }
+        
+        // Disable connection mutation (2% chance)
+        if (random(1) < 0.02) {
+            disableConnectionMutation();
         }
     }
     
@@ -155,5 +160,15 @@ class Genotype {
         // Create two new connections
         connections.add(new ConnectionGene(oldConn.m_inNode, newNode, connections.size(), 1.0));
         connections.add(new ConnectionGene(newNode, oldConn.m_outNode, connections.size(), (float)oldConn.m_weight));
+    }
+    
+    // Disable a random connection
+    void disableConnectionMutation() {
+        if (connections.isEmpty()) return;
+        
+        ConnectionGene conn = connections.get((int)random(connections.size()));
+        if (conn.m_enabled) {
+            conn.m_enabled = false;
+        }
     }
 }

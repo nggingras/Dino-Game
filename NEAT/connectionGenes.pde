@@ -23,10 +23,12 @@ class ConnectionGene {
         m_enabled = _copy.m_enabled;
     }
 
-    // Mutate the weight between -1 and 1 of the connection gene 10% of the time.
+    // Mutate the weight between -1 and 1 of the connection gene 20% of the time.
     void mutateWeight() {
-        if (random(1) < 0.1) {
+        if (random(1) < 0.2) { // Increased from 0.1 to 0.2
             m_weight = random(-1, 1);
+        } else if (random(1) < 0.1) { // 10% chance for small perturbation
+            m_weight += random(-0.2, 0.2);
         }
 
         //Sanity check - keep weight between bounds
