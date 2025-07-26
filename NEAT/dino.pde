@@ -15,6 +15,10 @@ class Dino {
   int dinoWalk = 0;
   int score = 0;
   
+  // Movement tracking for fitness calculation
+  int jumpCount = 0;
+  int duckCount = 0;
+  
   // AI-related variables
   Genotype brain;
   boolean isAI = false;
@@ -36,16 +40,23 @@ class Dino {
     float[] inputs = getSensorInputs(obstacleManager);
     float[] outputs = brain.feedForward(inputs);
     
-    // Interpret outputs
-    boolean shouldJump = outputs[0] > 0.5;
-    boolean shouldDuck = outputs[1] > 0.5;
+    // Improved action interpretation with lower thresholds
+    boolean shouldJump = outputs[0] > 0.1; // Lowered from 0.5 to 0.1
+    boolean shouldDuck = outputs[1] > 0.1; // Lowered from 0.5 to 0.1
     
-    // Apply actions
+    // Prefer jumping over ducking if both are active
+    if (shouldJump && shouldDuck) {
+      shouldDuck = false;
+    }
+    
+    // Apply actions and track them
     if (shouldJump && posY == 0) {
       velY = 16;
       isCrouching = false;
-    } else if (shouldDuck) {
+      jumpCount++;
+    } else if (shouldDuck && posY == 0) {
       isCrouching = true;
+      duckCount++;
     } else {
       isCrouching = false;
     }
@@ -53,30 +64,49 @@ class Dino {
   
   // Get sensor inputs for the neural network
   float[] getSensorInputs(ObstacleManager obstacleManager) {
-    float[] inputs = new float[4];
+    float[] inputs = new float[8]; // Increased from 4 to 8 inputs
     
-    // Find the closest obstacle
+    // Find the closest and second closest obstacles
     Obstacles closestObstacle = obstacleManager.getClosestObstacle(dinoX);
+    Obstacles secondObstacle = obstacleManager.getSecondClosestObstacle(dinoX);
     
     if (closestObstacle != null) {
-      // Distance to obstacle (normalized)
-      inputs[0] = (closestObstacle.positionX - dinoX) / width;
+      // Distance to closest obstacle (normalized to 0-1)
+      inputs[0] = max(0, min(1, (closestObstacle.positionX - dinoX) / width));
       
       // Obstacle height (normalized)
       inputs[1] = closestObstacle.obstacleHeight / 200.0;
       
-      // Obstacle type (bird = 1, cactus = 0) 
-      inputs[2] = (closestObstacle.type >= 3) ? 1.0 : 0.0;
+      // More detailed obstacle type encoding
+      inputs[2] = (closestObstacle.type == 0 || closestObstacle.type == 1 || closestObstacle.type == 2) ? 1.0 : 0.0; // Is cactus
+      inputs[3] = (closestObstacle.type >= 3) ? 1.0 : 0.0; // Is bird
       
-      // Dino's current Y position (normalized)
-      inputs[3] = posY / 200.0;
+      // Bird height information (only relevant for birds)
+      if (closestObstacle.type >= 3) {
+        inputs[4] = closestObstacle.positionY / 200.0; // Bird height normalized
+      } else {
+        inputs[4] = 0.0;
+      }
     } else {
       // No obstacle, neutral inputs
       inputs[0] = 1.0;  // Far distance
       inputs[1] = 0.0;  // No height
-      inputs[2] = 0.0;  // No obstacle
-      inputs[3] = posY / 200.0;
+      inputs[2] = 0.0;  // No cactus
+      inputs[3] = 0.0;  // No bird
+      inputs[4] = 0.0;  // No bird height
     }
+    
+    // Second obstacle information (for better planning)
+    if (secondObstacle != null) {
+      inputs[5] = max(0, min(1, (secondObstacle.positionX - dinoX) / width));
+      inputs[6] = (secondObstacle.type >= 3) ? 1.0 : 0.0; // Is second obstacle a bird
+    } else {
+      inputs[5] = 1.0;  // Far distance
+      inputs[6] = 0.0;  // No second bird
+    }
+    
+    // Dino's current state
+    inputs[7] = posY / 200.0; // Dino Y position (normalized)
     
     return inputs;
   }
@@ -85,15 +115,25 @@ class Dino {
   float calculateFitness() {
     if (brain == null) return score;
     
-    float fitness = score; // Base fitness from survival time
+    float fitness = score * 10; // Increased base fitness weight
     
-    // Bonus for staying alive longer
+    // Strong bonus for staying alive longer
     if (!dinoDead) {
-      fitness += 50;
+      fitness += 200; // Increased alive bonus
     }
     
-    // Bonus for high scores
-    fitness += score * 0.1;
+    // Exponential bonus for high scores to reward consistent performance
+    fitness += pow(score / 100.0, 1.5) * 50;
+    
+    // Penalty for dying early (less than 100 frames)
+    if (dinoDead && score < 100) {
+      fitness *= 0.5;
+    }
+    
+    // Small bonus for efficient movement patterns
+    // This encourages the AI to avoid unnecessary jumping
+    float movementEfficiency = score / max(1, jumpCount + duckCount * 0.5);
+    fitness += movementEfficiency * 5;
     
     return fitness;
   }

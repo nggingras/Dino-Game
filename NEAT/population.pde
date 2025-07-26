@@ -6,7 +6,7 @@ class Population {
     
     ObstacleManager obstacleManager = new ObstacleManager();
     
-    int populationSize = 20;
+    int populationSize = 50; // Increased from 20 to 50
     int generation = 1;
     int aliveCount = 0;
     boolean allDead = false;
@@ -17,7 +17,7 @@ class Population {
     Population() {
         // Create initial population
         for (int i = 0; i < populationSize; i++) {
-            Genotype genotype = new Genotype(4, 2); // 4 inputs, 2 outputs (jump, duck)
+            Genotype genotype = new Genotype(8, 2); // 8 inputs, 2 outputs (jump, duck)
             genotypes.add(genotype);
             
             Dino dino = new Dino(genotype);
@@ -106,7 +106,7 @@ class Population {
             }
         }
         
-        int eliteCount = populationSize / 10; // Top 10%
+        int eliteCount = populationSize / 5; // Top 20% instead of 10%
         for (int i = 0; i < eliteCount; i++) {
             newGenotypes.add(new Genotype(sorted.get(i)));
         }
@@ -117,7 +117,7 @@ class Population {
             Genotype parent2 = selectParent();
             
             Genotype offspring;
-            if (random(1) < 0.75) { // 75% crossover, 25% mutation only
+            if (random(1) < 0.80) { // 80% crossover, 20% mutation only (increased from 75%)
                 offspring = crossover(parent1, parent2);
             } else {
                 offspring = new Genotype(parent1);
